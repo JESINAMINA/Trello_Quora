@@ -18,7 +18,7 @@ public class UserAuthenticationService {
         UserAuthTokenEntity userAuthTokenEntity = userDao.getUserAuthenticationToken(accessToken);
         ZonedDateTime isLoggedIn = userAuthTokenEntity.getLoginAt();
         ZonedDateTime isLoggedOut = userAuthTokenEntity.getLogoutAt();
-        //check if the auth token is expired or not
+        //check if the access token is expired or invalid
         if (isLoggedOut != null && isLoggedOut.isAfter(isLoggedIn)) {
             return true;
         } else return false;
