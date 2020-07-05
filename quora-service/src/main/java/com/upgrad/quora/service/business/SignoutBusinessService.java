@@ -18,21 +18,16 @@ public class SignoutBusinessService {
     @Autowired
     private UserDao userDao;
 
-    /**
-     * @param  accessToken the first {@code String} to signout a user.
-     * @return List of QuestionEntity objects.
-     */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthTokenEntity signOutService(String accessToken) throws SignOutRestrictedException {
         UserAuthTokenEntity userAuthTokenEntity = null;
-        //check user sign in or not
-        userAuthTokenEntity = userDao.getUserAuthToken(accessToken);
+        //Validate if user is signed in or not
+        userAuthTokenEntity = userDao.getUserAuthenticationToken(accessToken);
         if (userAuthTokenEntity != null) {
             final ZonedDateTime now = ZonedDateTime.now();
             userAuthTokenEntity.setLogoutAt(now);
             userAuthTokenEntity = userDao.updateUserLogOut(userAuthTokenEntity);
         } else {
-            //if user is not sign in then throws exception
             throw new SignOutRestrictedException("SGR-001", "User is not Signed in");
         }
         return userAuthTokenEntity;

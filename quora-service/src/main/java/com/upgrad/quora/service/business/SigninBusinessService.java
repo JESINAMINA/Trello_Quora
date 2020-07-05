@@ -1,10 +1,10 @@
 package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.UserDao;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
-import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,36 +13,28 @@ import java.time.ZonedDateTime;
 
 @Service
 public class SigninBusinessService {
-
+    @Autowired
+    private PasswordCryptographyProvider cryptographyProvider;
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private PasswordCryptographyProvider cryptographyProvider;
 
-    /**
-     * @param  username the first {@code String} username of the user.
-     * @param  password the second {@code String} password of the user.
-     * @return List of QuestionEntity objects.
-     */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthTokenEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
         UserAuthTokenEntity userAuthTokenEntity = null;
         UserEntity userEntity = userDao.getUserByUserName(username);
-        //check userName not exist
+        //check for userName
         if (userEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
-        //encrypt password
+        //check for password
         final String encryptedPassword = cryptographyProvider.encrypt(password, userEntity.getSalt());
 
         //send username and encrypted password to userDao
         userEntity = userDao.authenticateUser(username, encryptedPassword);
-
+        //check if userName and password matches and generate authentication token
         if (userEntity != null) {
-            //if userName and password match
             String uuid = userEntity.getUuid();
-            //Geneate authention token
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             userAuthTokenEntity = new UserAuthTokenEntity();
             userAuthTokenEntity.setUser(userEntity);
@@ -54,7 +46,6 @@ public class SigninBusinessService {
             userAuthTokenEntity.setUuid(userEntity.getUuid());
             userDao.createAuthToken(userAuthTokenEntity);
         } else {
-            //throw exception
             throw new AuthenticationFailedException("ATH-002", "Password Failed");
         }
         return userAuthTokenEntity;

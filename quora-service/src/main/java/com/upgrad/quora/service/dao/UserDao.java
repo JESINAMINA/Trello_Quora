@@ -23,6 +23,23 @@ public class UserDao {
         return userAuthTokenEntity;
     }
 
+    public UserAuthTokenEntity getUserAuthenticationToken(final String accessToken) {
+        try {
+            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+        } catch (NoResultException nre) {
+
+            return null;
+        }
+    }
+
+    public UserEntity authenticateUser(final String userName, final String password) {
+        try {
+            return entityManager.createNamedQuery("authenticateUserQuery", UserEntity.class).setParameter("userName", userName).setParameter("password", password).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
     public UserEntity getUserByUserName(final String username) {
         try {
             return entityManager.createNamedQuery("userByUserName", UserEntity.class).setParameter("userName", username).getSingleResult();
@@ -49,22 +66,6 @@ public class UserDao {
         }
     }
 
-    public UserAuthTokenEntity getUserAuthToken(final String accessToken) {
-        try {
-            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
-        } catch (NoResultException nre) {
-
-            return null;
-        }
-    }
-
-    public UserEntity authenticateUser(final String userName, final String password) {
-        try {
-            return entityManager.createNamedQuery("authenticateUserQuery", UserEntity.class).setParameter("userName", userName).setParameter("password", password).getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        }
-    }
 
     public UserAuthTokenEntity updateUserLogOut(final UserAuthTokenEntity userAuthTokenEntity) {
         try {
