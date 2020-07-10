@@ -1,8 +1,6 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.QuestionDetailsResponse;
-import com.upgrad.quora.api.model.QuestionRequest;
-import com.upgrad.quora.api.model.QuestionResponse;
+import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AuthenticationService;
 import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.entity.QuestionEntity;
@@ -15,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -103,6 +98,33 @@ public class QuestionController {
         }
 
         return new ResponseEntity<List<QuestionDetailsResponse>>(res, HttpStatus.OK);
+
+    }
+
+    //Edit question
+    @RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionEditResponse> editQuestion(
+            @RequestHeader("authorization") final String authorization,
+            @PathVariable("questionId") final String questionId, final QuestionEditRequest questionEditRequest)
+            throws AuthenticationFailedException, AuthorizationFailedException, InvalidQuestionException {
+
+        //Get bearer access token
+        String accessToken = authenticationService.getBearerAccessToken(authorization);
+
+        //Bearer authentication
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService
+                .validateBearerAuthorization(accessToken);
+        UserEntity user = userAuthTokenEntity.getUser();
+
+        //Edit question
+        QuestionEntity questionEntity = questionService.
+                editQuestion(questionEditRequest.getContent(), user.getUuid(), questionId);
+
+        QuestionEditResponse questionEditResponse = new QuestionEditResponse()
+                .id(questionEntity.getUuid()).status("QUESTION EDITED");
+
+        return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
 
     }
 

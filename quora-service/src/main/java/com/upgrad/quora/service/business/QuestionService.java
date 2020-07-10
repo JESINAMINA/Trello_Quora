@@ -3,6 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,36 @@ public class QuestionService {
     public List<QuestionEntity> getAllQuestions(){
 
         return questionDao.getAllQuestions();
+
+    }
+
+    //Edit question
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity editQuestion(String content, String userUuid, String questionUuid)
+            throws InvalidQuestionException, AuthorizationFailedException {
+
+        QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
+
+        //If question's UUID does not exist
+        if (questionEntity == null){
+            throw new InvalidQuestionException("QUES-001","Entered question uuid does not exist");
+        }
+
+        //If current user is not the question owner
+        if (userUuid != null && !userUuid.equals(questionEntity.getUser().getUuid())){
+            throw new AuthorizationFailedException("ATHR-003","Only the question owner can edit the question");
+        }
+
+        //If the new content is null or empty or equal to existing content
+        if (content == null || content.isEmpty() || content.trim().isEmpty() ||
+                content.equalsIgnoreCase(questionEntity.getContent())){
+            throw new InvalidQuestionException("QUES-004",
+                    "New content cannot be empty or null or equal to existing content");
+        }
+
+        questionEntity.setContent(content);
+        questionDao.updateQuestion(questionEntity);
+        return questionDao.getQuestionByUuid(questionUuid);
 
     }
 
