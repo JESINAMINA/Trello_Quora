@@ -1,6 +1,7 @@
 package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.stereotype.Repository;
@@ -66,6 +67,14 @@ public class QuestionDao {
 
         entityManager.remove(questionEntity);
         return questionEntity;
+
+    }
+
+    //Get all questions posted by specific user
+    public List<QuestionEntity> getAllQuestionByUser(UserEntity user){
+
+        return entityManager.createNamedQuery("QuestionEntitiesByUser", QuestionEntity.class)
+                .setParameter("user", user).getResultList();
 
     }
 

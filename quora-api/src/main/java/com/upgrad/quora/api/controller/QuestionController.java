@@ -9,6 +9,7 @@ import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,7 +68,7 @@ public class QuestionController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(
             @RequestHeader("authorization") final String authorization)
-            throws AuthenticationFailedException, AuthorizationFailedException {
+            throws AuthorizationFailedException, AuthenticationFailedException {
 
         //Get bearer access token
         String accessToken = authenticationService.getBearerAccessToken(authorization);
@@ -75,18 +76,19 @@ public class QuestionController {
         //Bearer authentication
         UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
 
+        //Get user details
+        UserEntity user = userAuthTokenEntity.getUser();
+
         //Get all questions and send across ResponseEntity
         List<QuestionEntity> questionEntityList = questionService.getAllQuestions();
 
         return getListResponseEntity(questionEntityList);
 
+
     }
 
-    //Generate list of QuestionDetailsResponse
-    private ResponseEntity<List<QuestionDetailsResponse>> getListResponseEntity(
-            List<QuestionEntity> questionEntityList){
-
-        List<QuestionDetailsResponse> res = new ArrayList<>();
+    private ResponseEntity<List<QuestionDetailsResponse>> getListResponseEntity(List<QuestionEntity> questionEntityList) {
+        List<QuestionDetailsResponse> res = new ArrayList<QuestionDetailsResponse>();
 
         for (QuestionEntity q : questionEntityList){
             QuestionDetailsResponse questionDetailsResponse = new QuestionDetailsResponse();
@@ -96,8 +98,8 @@ public class QuestionController {
         }
 
         return new ResponseEntity<List<QuestionDetailsResponse>>(res, HttpStatus.OK);
-
     }
+
 
     //Edit question
     @RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}",
@@ -112,6 +114,8 @@ public class QuestionController {
 
         //Bearer authentication
         UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
+
+        //Get user details
         UserEntity user = userAuthTokenEntity.getUser();
 
         //Edit question
@@ -138,6 +142,8 @@ public class QuestionController {
 
         //Bearer authentication
         UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
+
+        //Get user details
         UserEntity user = userAuthTokenEntity.getUser();
 
         //Delete question
@@ -146,6 +152,30 @@ public class QuestionController {
                 id(questionEntity.getUuid()).status("QUESTION DELETED");
 
         return new ResponseEntity<QuestionDeleteResponse>(deleteResponse,HttpStatus.OK);
+
+    }
+
+    //Get all questions posted by specific user
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(
+            @RequestHeader("authorization") final String authorization,
+            @PathVariable("userId") final String userId)
+            throws AuthenticationFailedException, AuthorizationFailedException, UserNotFoundException {
+
+        //Get bearer access token
+        String accessToken = authenticationService.getBearerAccessToken(authorization);
+
+        //Bearer authentication
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
+
+        //Get user details
+        UserEntity user = userAuthTokenEntity.getUser();
+
+        //Get all questions and send across ResponseEntity
+        List<QuestionEntity> questionEntityList = questionService.getAllQuestionsByUser(userId);
+
+        return getListResponseEntity(questionEntityList);
 
     }
 

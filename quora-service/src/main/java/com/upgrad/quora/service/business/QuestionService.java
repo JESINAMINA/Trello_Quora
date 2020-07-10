@@ -6,6 +6,7 @@ import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -96,6 +97,20 @@ public class QuestionService {
         }
 
         return questionDao.deleteQuestion(questionEntity);
+    }
+
+    //Get all questions posted by a specific user
+    public List<QuestionEntity> getAllQuestionsByUser(String uuid) throws UserNotFoundException {
+
+        UserEntity user = userDao.getUserByUuid(uuid);
+
+        if(user == null){
+            throw new UserNotFoundException("USR-001",
+                    "User with entered uuid whose question details are to be seen does not exist");
+        }
+
+        return questionDao.getAllQuestionByUser(user);
+
     }
 
 }
