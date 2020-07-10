@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class QuestionDao {
@@ -27,6 +28,15 @@ public class QuestionDao {
         } catch (NoResultException nre){
             return null;
         }
+
+    }
+
+    //Get all questions
+    public List<QuestionEntity> getAllQuestions(){
+
+        return entityManager.createQuery("SELECT q from QuestionEntity q",QuestionEntity.class)
+                .getResultList();
+
     }
 
 }
