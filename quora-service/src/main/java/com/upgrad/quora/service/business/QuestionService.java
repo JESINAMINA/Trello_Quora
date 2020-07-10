@@ -3,6 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,28 @@ public class QuestionService {
         questionDao.updateQuestion(questionEntity);
         return questionDao.getQuestionByUuid(questionUuid);
 
+    }
+
+    //Delete question
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity deleteQuestion(UserEntity user, String questionUuid)
+            throws InvalidQuestionException, AuthorizationFailedException {
+
+        QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
+
+        //If question's UUID does not exist
+        if (questionEntity == null){
+            throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
+        }
+
+        //If the logged in user is not the question owner or non-admin
+        if (!user.getUuid().equals(questionEntity.getUser().getUuid()) &&
+                !user.getRole().equalsIgnoreCase("admin")){
+            throw new AuthorizationFailedException("ATHR-003",
+                    "Only the question owner or admin can delete the question");
+        }
+
+        return questionDao.deleteQuestion(questionEntity);
     }
 
 }

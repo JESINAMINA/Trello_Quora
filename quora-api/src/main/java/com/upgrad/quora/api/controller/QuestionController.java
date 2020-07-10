@@ -42,8 +42,7 @@ public class QuestionController {
         String accessToken = authenticationService.getBearerAccessToken(authorization);
 
         //Bearer authentication
-        UserAuthTokenEntity userAuthTokenEntity = authenticationService
-                .validateBearerAuthorization(accessToken);
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
 
         //Get user details
         UserEntity user = userAuthTokenEntity.getUser();
@@ -74,8 +73,7 @@ public class QuestionController {
         String accessToken = authenticationService.getBearerAccessToken(authorization);
 
         //Bearer authentication
-        UserAuthTokenEntity userAuthTokenEntity = authenticationService
-                .validateBearerAuthorization(accessToken);
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
 
         //Get all questions and send across ResponseEntity
         List<QuestionEntity> questionEntityList = questionService.getAllQuestions();
@@ -113,8 +111,7 @@ public class QuestionController {
         String accessToken = authenticationService.getBearerAccessToken(authorization);
 
         //Bearer authentication
-        UserAuthTokenEntity userAuthTokenEntity = authenticationService
-                .validateBearerAuthorization(accessToken);
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
         UserEntity user = userAuthTokenEntity.getUser();
 
         //Edit question
@@ -125,6 +122,30 @@ public class QuestionController {
                 .id(questionEntity.getUuid()).status("QUESTION EDITED");
 
         return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
+
+    }
+
+    //Delete question
+    @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion(
+            @RequestHeader("authorization") final String authorization,
+            @PathVariable("questionId") final String questionId)
+            throws AuthorizationFailedException, AuthenticationFailedException, InvalidQuestionException {
+
+        //Get bearer access token
+        String accessToken = authenticationService.getBearerAccessToken(authorization);
+
+        //Bearer authentication
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
+        UserEntity user = userAuthTokenEntity.getUser();
+
+        //Delete question
+        QuestionEntity questionEntity = questionService.deleteQuestion(user, questionId);
+        QuestionDeleteResponse deleteResponse = new QuestionDeleteResponse().
+                id(questionEntity.getUuid()).status("QUESTION DELETED");
+
+        return new ResponseEntity<QuestionDeleteResponse>(deleteResponse,HttpStatus.OK);
 
     }
 
