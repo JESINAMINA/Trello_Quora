@@ -64,7 +64,7 @@ public class QuestionController {
     }
 
     //Get all questions
-    @RequestMapping(method = RequestMethod.GET, path = "/question/all/",
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(
             @RequestHeader("authorization") final String authorization)

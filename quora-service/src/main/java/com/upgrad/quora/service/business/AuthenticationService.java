@@ -18,6 +18,8 @@ public class AuthenticationService {
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
 
+    @Autowired
+    private UserAuthenticationService userAuthenticationService ;
     //Get bearer access token
     public String getBearerAccessToken(final String authorization) throws AuthenticationFailedException {
 
@@ -45,7 +47,7 @@ public class AuthenticationService {
 
         if(userAuthTokenEntity == null){
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        }else if (userAuthTokenEntity.getLogoutAt() != null){
+        }else if(userAuthenticationService.isSignedOut(accessToken)){
             throw new AuthorizationFailedException
                     ("ATHR-002", "User is signed out.Sign in first to post a question");
         }
