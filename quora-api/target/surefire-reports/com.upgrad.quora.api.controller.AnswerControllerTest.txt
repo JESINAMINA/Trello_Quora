@@ -1,0 +1,36 @@
+-------------------------------------------------------------------------------
+Test set: com.upgrad.quora.api.controller.AnswerControllerTest
+-------------------------------------------------------------------------------
+Tests run: 14, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 0.291 s <<< FAILURE! - in com.upgrad.quora.api.controller.AnswerControllerTest
+deleteAnswerWithNonExistingAccessToken(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.049 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<404>
+	at com.upgrad.quora.api.controller.AnswerControllerTest.deleteAnswerWithNonExistingAccessToken(AnswerControllerTest.java:87)
+
+getAllAnswersToNonExistingQuestion(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.039 s  <<< FAILURE!
+java.lang.AssertionError: No value at JSON path "code"
+	at com.upgrad.quora.api.controller.AnswerControllerTest.getAllAnswersToNonExistingQuestion(AnswerControllerTest.java:136)
+Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+	at com.upgrad.quora.api.controller.AnswerControllerTest.getAllAnswersToNonExistingQuestion(AnswerControllerTest.java:136)
+
+getAllAnswersToQuestionWithSignedOutUser(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.033 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<404>
+	at com.upgrad.quora.api.controller.AnswerControllerTest.getAllAnswersToQuestionWithSignedOutUser(AnswerControllerTest.java:127)
+
+deleteAnswerWithSignedOutUser(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.036 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<404>
+	at com.upgrad.quora.api.controller.AnswerControllerTest.deleteAnswerWithSignedOutUser(AnswerControllerTest.java:95)
+
+deleteAnswerWithoutOwnership(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.044 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<404>
+	at com.upgrad.quora.api.controller.AnswerControllerTest.deleteAnswerWithoutOwnership(AnswerControllerTest.java:111)
+
+deleteNonExistingAnswer(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.042 s  <<< FAILURE!
+java.lang.AssertionError: No value at JSON path "code"
+	at com.upgrad.quora.api.controller.AnswerControllerTest.deleteNonExistingAnswer(AnswerControllerTest.java:104)
+Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+	at com.upgrad.quora.api.controller.AnswerControllerTest.deleteNonExistingAnswer(AnswerControllerTest.java:104)
+
+getAllAnswersToQuestionWithNonExistingAccessToken(com.upgrad.quora.api.controller.AnswerControllerTest)  Time elapsed: 0.042 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<404>
+	at com.upgrad.quora.api.controller.AnswerControllerTest.getAllAnswersToQuestionWithNonExistingAccessToken(AnswerControllerTest.java:119)
+

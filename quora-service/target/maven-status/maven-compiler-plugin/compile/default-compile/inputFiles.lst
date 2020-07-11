@@ -3,6 +3,7 @@
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/exception/UserNotFoundException.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/entity/UserEntity.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/UserAuthenticationService.java
+/Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/EditAnswerBusinessService.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/common/ErrorCode.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/entity/UserAuthTokenEntity.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/entity/QuestionEntity.java
@@ -10,8 +11,11 @@
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/SigninBusinessService.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/exception/AuthorizationFailedException.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/SignoutBusinessService.java
+/Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/CreateAnswerBusinessService.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/dao/UserDao.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/UserCommonService.java
+/Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/entity/AnswerEntity.java
+/Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/dao/AnswerDao.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/AuthenticationService.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/exception/SignUpRestrictedException.java
 /Users/jesinamina/Documents/Trello_quora/quora-service/src/main/java/com/upgrad/quora/service/business/PasswordCryptographyProvider.java
