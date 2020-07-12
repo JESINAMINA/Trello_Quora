@@ -2,6 +2,7 @@ package com.upgrad.quora.service.dao;
 
 
 import com.upgrad.quora.service.entity.AnswerEntity;
+import com.upgrad.quora.service.entity.QuestionEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class AnswerDao {
@@ -36,8 +38,18 @@ public class AnswerDao {
     //Delete answer
     @OnDelete(action = OnDeleteAction.CASCADE)
     public AnswerEntity deleteAnswer(final AnswerEntity answerEntity){
+
         entityManager.remove(answerEntity);
         return answerEntity;
+
+    }
+
+    ////Get all answers for specific/given question
+    public List<AnswerEntity> getAllAnswersForGivenQuestion(final QuestionEntity questionEntity){
+
+        return entityManager.createNamedQuery("answersByQuestionEntity", AnswerEntity.class)
+                .setParameter("questionEntity", questionEntity).getResultList();
+
     }
 
 }
