@@ -2,6 +2,8 @@ package com.upgrad.quora.service.dao;
 
 
 import com.upgrad.quora.service.entity.AnswerEntity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -31,7 +33,11 @@ public class AnswerDao {
         }
     }
 
-
-
+    //Delete answer
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    public AnswerEntity deleteAnswer(final AnswerEntity answerEntity){
+        entityManager.remove(answerEntity);
+        return answerEntity;
+    }
 
 }

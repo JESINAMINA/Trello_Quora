@@ -1,14 +1,16 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.AnswerEditRequest;
-import com.upgrad.quora.api.model.AnswerEditResponse;
-import com.upgrad.quora.api.model.AnswerRequest;
-import com.upgrad.quora.api.model.AnswerResponse;
+import com.upgrad.quora.api.model.*;
+import com.upgrad.quora.service.business.AnswerService;
+import com.upgrad.quora.service.business.AuthenticationService;
 import com.upgrad.quora.service.business.CreateAnswerBusinessService;
 import com.upgrad.quora.service.business.EditAnswerBusinessService;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.entity.AnswerEntity;
+import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AnswerNotFoundException;
+import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,12 @@ public class AnswerController {
     CreateAnswerBusinessService createAnswerBusinessService;
     @Autowired
     QuestionDao questionDao;
+
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private AnswerService answerService;
 
     @PostMapping(path = "/question/{questionId}/answer/create", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AnswerResponse> createAnswer(final AnswerRequest answerRequest,
@@ -75,6 +83,32 @@ public class AnswerController {
         AnswerEntity updatedAnswerEntity = editAnswerBusinessService.editAnswerContent(answerEntity,accessToken);
         AnswerEditResponse answerEditResponse = new AnswerEditResponse().id(updatedAnswerEntity.getUuid()).status("ANSWER EDITED");
         return new ResponseEntity<AnswerEditResponse>(answerEditResponse, HttpStatus.OK);
+    }
+
+    //Delete answer
+    @RequestMapping(method = RequestMethod.DELETE, path = "/answer/delete/{answerId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerDeleteResponse> deleteAnswer(
+            @RequestHeader("authorization") final String authorization,
+            @PathVariable("answerId") final String answerId)
+            throws AuthenticationFailedException, AuthorizationFailedException, AnswerNotFoundException {
+
+        //Get bearer access token
+        String accessToken = authenticationService.getBearerAccessToken(authorization);
+
+        //Bearer authentication
+        UserAuthTokenEntity userAuthTokenEntity = authenticationService.validateBearerAuthorization(accessToken);
+
+        //Get user details
+        UserEntity user = userAuthTokenEntity.getUser();
+
+        //Delete answer
+        AnswerEntity answerEntity = answerService.deleteAnswer(user.getUuid(),answerId);
+        AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().
+                id(answerEntity.getUuid()).status("ANSWER DELETED");
+
+        return new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse,HttpStatus.OK);
+
     }
 
 }
