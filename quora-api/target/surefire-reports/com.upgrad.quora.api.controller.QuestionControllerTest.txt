@@ -1,16 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.upgrad.quora.api.controller.QuestionControllerTest
 -------------------------------------------------------------------------------
-Tests run: 16, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.224 s <<< FAILURE! - in com.upgrad.quora.api.controller.QuestionControllerTest
-getAllQuestionsWithSignedOutUser(com.upgrad.quora.api.controller.QuestionControllerTest)  Time elapsed: 0.009 s  <<< FAILURE!
-java.lang.AssertionError: Status expected:<403> but was:<404>
-	at com.upgrad.quora.api.controller.QuestionControllerTest.getAllQuestionsWithSignedOutUser(QuestionControllerTest.java:62)
-
-getAllQuestions(com.upgrad.quora.api.controller.QuestionControllerTest)  Time elapsed: 0.041 s  <<< FAILURE!
-java.lang.AssertionError: Status expected:<200> but was:<404>
-	at com.upgrad.quora.api.controller.QuestionControllerTest.getAllQuestions(QuestionControllerTest.java:47)
-
-getAllQuestionsWithNonExistingAccessToken(com.upgrad.quora.api.controller.QuestionControllerTest)  Time elapsed: 0.038 s  <<< FAILURE!
-java.lang.AssertionError: Status expected:<403> but was:<404>
-	at com.upgrad.quora.api.controller.QuestionControllerTest.getAllQuestionsWithNonExistingAccessToken(QuestionControllerTest.java:54)
-
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 s - in com.upgrad.quora.api.controller.QuestionControllerTest
